@@ -20,11 +20,6 @@ TEST(GoalUndoTest, sanityCheck)
 }
 
 TEST(GoalUndoTest, addOperation_Goal_Operation_nonEmpty){
-	/*std::vector <std::string> operationsTest;
-	std::stack <Goal> goalsTest;
-	
-	operationsTest.push_back("addMilk");
-	operationsTest.push_back("addSugar");*/
 	GoalUndo goalUndoTest;
 	goalUndoTest.addOperation("makeCoffee", "addMilk");
 	ASSERT_EQ("makeCoffee",goalUndoTest.getGoal());
@@ -132,6 +127,8 @@ TEST(GoalUndoTest, undoOperation_empty_goal_getGoal){
 	goalUndoTest.undoOperation();
 	ASSERT_EQ("",goalUndoTest.getGoal());
 }
+
+//If I perform undoOperation twice, when there is only a single operation and check that getGoal is empty it gives segfault  
 /*TEST(GoalUndoTest, undoOperation_single_goal_no_Operation){
 	GoalUndo goalUndoTest;
 	goalUndoTest.addOperation("addSugar");
@@ -139,6 +136,16 @@ TEST(GoalUndoTest, undoOperation_empty_goal_getGoal){
 	goalUndoTest.undoOperation();
 	ASSERT_EQ("",goalUndoTest.getGoal());
 }*/
+
+//If I perform undoOperation twice, when there is only a single operation and check getOperations, it gives bad_alloc error
+/*TEST(GoalUndoTest, undoOperation_single_goal_no_Operation){
+	GoalUndo goalUndoTest;
+	goalUndoTest.addOperation("addSugar");
+	goalUndoTest.undoOperation("addSugar");
+	goalUndoTest.undoOperation();
+	ASSERT_EQ("",goalUndoTest.getOperations());
+}*/
+
 TEST(GoalUndoTest, getGoal){
 	GoalUndo goalUndoTest;
 	goalUndoTest.addOperation("addSugar");
@@ -149,4 +156,26 @@ TEST(GoalUndoTest, addOperation_named_empty_op_arg){
 	goalUndoTest.addOperation("");
 	ASSERT_EQ("",goalUndoTest.getGoal());
 }
-
+TEST(GoalUndoTest, UndoOperation_check_empty_goal){
+	GoalUndo goalUndoTest;
+	goalUndoTest.addOperation("makeCoffee","addMilk");
+	goalUndoTest.addOperation("addSugar");
+	goalUndoTest.undoOperation();
+	ASSERT_EQ("makeCoffee",goalUndoTest.getGoal());
+}
+TEST(GoalUndoTest, UndoGoal_multi_op){
+	GoalUndo goalUndoTest;
+	goalUndoTest.addOperation("makeCoffee","addMilk");
+	goalUndoTest.addOperation("addSugar");
+	goalUndoTest.addOperation("stir");
+	goalUndoTest.undoGoal();
+	ASSERT_EQ("",goalUndoTest.getOperations());
+}
+TEST(GoalUndoTest, UndoOperation_multi_op){
+	GoalUndo goalUndoTest;
+	goalUndoTest.addOperation("makeCoffee","addMilk");
+	goalUndoTest.addOperation("addSugar");
+	goalUndoTest.addOperation("stir");
+	goalUndoTest.undoOperation();
+	ASSERT_EQ("addMilk addSugar",goalUndoTest.getOperations());
+}
