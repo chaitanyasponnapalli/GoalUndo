@@ -179,3 +179,10 @@ TEST(GoalUndoTest, UndoOperation_multi_op){
 	goalUndoTest.undoOperation();
 	ASSERT_EQ("addMilk addSugar",goalUndoTest.getOperations());
 }
+TEST(GoalUndoTest, multi_goal_single_op){
+	GoalUndo goalUndoTest;
+	goalUndoTest.addOperation("makeCoffee","addMilk");
+	goalUndoTest.undoGoal();
+	goalUndoTest.addOperation("stir");
+	ASSERT_EQ("stir",goalUndoTest.getOperations());
+}
